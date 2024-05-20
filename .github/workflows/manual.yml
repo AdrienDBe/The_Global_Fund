@@ -1,0 +1,27 @@
+name: Keep App Alive
+
+on:
+  schedule:
+    - cron: '0 0 */6 * *'  # This will run the action every 6 days
+  push:
+    branches:
+      - main
+
+jobs:
+  keep-alive:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4  # Updated to v3 for Node.js 20 support
+
+    - name: Create an empty commit
+      run: |
+        git config --global user.email "your-username@users.noreply.github.com"
+        git config --global user.name "your-username"
+        git commit --allow-empty -m "chore: keep-alive commit"
+    - name: Push changes
+      run: |
+        git push
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
